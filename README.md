@@ -67,4 +67,6 @@ The tool outputs the following:
 
 Line_Number | R_squared_value | Resolution (units) |	X1 | Y1 |	X2 | Y2
 -|-|-|-|-|-|-|
-Automatic line #/ Manual line #/ Automatic line # in ROI # | R_squared_value | Resolution |	X1 | Y1 |	X2 | Y2
+Automatic line #/ Manual line #/ Automatic line # in ROI # | r^2 | resolution |	X1 | Y1 |	X2 | Y2
+
+Where X1, Y1, X2, Y2 are the two points that make up the line for that line profile.
