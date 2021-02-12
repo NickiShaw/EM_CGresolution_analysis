@@ -66,5 +66,5 @@ The tool outputs the following:
 6. output.csv with the following information:
 
 Line_Number | R_squared_value | Resolution (units) |	X1 | Y1 |	X2 | Y2
-:-------------------------:|:-------------------------:
+-|-|-|-|-|-|-|
 Automatic line #/ Manual line #/ Automatic line # in ROI # | R_squared_value | Resolution |	X1 | Y1 |	X2 | Y2
