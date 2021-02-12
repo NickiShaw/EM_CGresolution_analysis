@@ -52,3 +52,19 @@ Term            |  Description
 `-minimum_contour [int]` | Takes an integer to scale the minimum area of a contour allowed, default = 0.003 * image
 `-manual_scalebar [int]` | Takes an integer as the pixel length of the scalebar (optional, use if scalebar is not automatically located)
 `-point_fit_val [int]` | Takes an integer to reduce the number of points used to fit the sigmoid, default = 1 (take every point), *note this should be set to 5 to reduce the runtime for approximate results*
+
+## Outputs
+
+All the output is stored in a single folder named with the date and time for the run. This is to avoid accidentally overwriting the content of a previous run.
+
+The tool outputs the following:
+1. Images with the line profile location indicated in red, with the line number indicated in the filename.
+2. The same images as in 1., but including the 'bounding lines' used to calculate the 25% and 75% boundaries and resolution.
+3. Graphs showing the intensities across line profile fitted to a sigmoid curve, the line numbers are  also indicated in the filenames for easy searching.
+4. The contour thresholded image and another image with all the contours outlined in red.
+5. run_info.txt which stores all the options used in the run which are useful to record for future reference and to ensure runs can be replicated on later images.
+6. output.csv with the following information:
+
+Line_Number | R_squared_value | Resolution (units) |	X1 | Y1 |	X2 | Y2
+:-------------------------:|:-------------------------:
+Automatic line #/ Manual line #/ Automatic line # in ROI # | R_squared_value | Resolution |	X1 | Y1 |	X2 | Y2
