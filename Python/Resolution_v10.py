@@ -403,14 +403,15 @@ if manual_option and manual_ROIs != []:
 # Process outputs
 #############################################################
 
+res_header = 'Resolution (' + str(sclbr_realsize_index) + ')'
 # Write resolution values to spreadsheet.
 output_spreadheet_path = str(output_dir) + "output.csv"
 with open(output_spreadheet_path, mode='w', newline='') as csv_file:
-    fieldnames = ['Line_Number', 'R_squared_value', 'Resolution', 'X1', 'Y1', 'X2', 'Y2']
+    fieldnames = ['Line_Number', 'R_squared_value', res_header, 'X1', 'Y1', 'X2', 'Y2']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()
     for i in range(len(name)):
-        writer.writerow({'Line_Number': name[i], 'R_squared_value': r2_list[i], 'Resolution': res_list[i],
+        writer.writerow({'Line_Number': name[i], 'R_squared_value': r2_list[i], res_header: res_list[i],
                          'X1': x1_output[i], 'Y1': y1_output[i], 'X2': x2_output[i], 'Y2': y2_output[i]})
 
 
@@ -434,7 +435,7 @@ else:
 info_file.write("Threshold to find contours: " + str(contour_threshold_setting) + " \n")
 info_file.write("Automatic lines: " + str(not no_automatic) + " \n")
 info_file.write("Maximum lines: " + str(max_lines) + " \n")
-info_file.write("Line length: " + str(line_length) + " \n")
+info_file.write("Line length: " + str(line_length) + " pixels \n")
 info_file.write("Thickness of lines used: " + str(thickness) + " (" + str(thickness_in_pixels) + " pixel(s) wide) \n")
 info_file.write("Scale value to reduce points used in cuve fitting: " + str(point_scale_fit) + "(1 = use all points) \n")
 
