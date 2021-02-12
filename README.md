@@ -57,13 +57,14 @@ Term            |  Description
 
 All the output is stored in a single folder named with the date and time for the run. This is to avoid accidentally overwriting the content of a previous run.
 
-The tool outputs the following:
-1. Images with the line profile location indicated in red, with the line number indicated in the filename.
-2. The same images as in 1., but including the 'bounding lines' used to calculate the 25% and 75% boundaries and resolution.
+A standard run outputs the following:
+1. The image with the scalebar highlighted in red.
+2. Images with the line profile location indicated in red, with the line number indicated in the filename.
 3. Graphs showing the intensities across line profile fitted to a sigmoid curve, the line numbers are  also indicated in the filenames for easy searching.
-4. The contour thresholded image and another image with all the contours outlined in red.
-5. run_info.txt which stores all the options used in the run which are useful to record for future reference and to ensure runs can be replicated on later images.
-6. output.csv with the following information:
+4. The same images as in 3., but including the 'bounding lines' used to calculate the 25% and 75% boundaries and resolution.
+5. The contour thresholded image and another image with all the contours outlined in red.
+6. run_info.txt which stores all the options used in the run which are useful to record for future reference and to ensure runs can be replicated on later images.
+7. output.csv with the following information:
 
 Line_Number | R_squared_value | Resolution (units) |	X1 | Y1 |	X2 | Y2
 -|-|-|-|-|-|-|
