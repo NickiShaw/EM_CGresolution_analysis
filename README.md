@@ -70,6 +70,7 @@ Line_Number | R_squared_value | Resolution (units) |	X1 | Y1 |	X2 | Y2
 -|-|-|-|-|-|-|
 Automatic line #/ Manual line #/ Automatic line # in ROI # | r^2 | resolution |	X1 | Y1 |	X2 | Y2
 
-![sample_output_image](https://github.com/NickiShaw/EM_CGresolution_analysis/blob/main/Wiki_Pictures/sample_outputs.jpg?raw=true)
-
 Where X1, Y1, X2, Y2 are the two points that make up the line for that line profile.
+
+Examples are shown below:
+![sample_output_image](https://github.com/NickiShaw/EM_CGresolution_analysis/blob/main/Wiki_Pictures/sample_outputs.jpg?raw=true)
