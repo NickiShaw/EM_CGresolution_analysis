@@ -26,8 +26,7 @@ C:\Users\username\.conda\envs\CG_resolution_env\python.exe C:/Users/username/Des
 
 The following features are command line options that allow manual settings.
 
-# Required:
-
+### Required:
 
 Term            |  Description
 :-------------------------:|:-------------------------:
@@ -35,27 +34,21 @@ Term            |  Description
 `-out [PATH]`  | Path to desired output folder
 `-scale [int]` | Scalebar length (in nm unless otherwise specified)
 
-# Optional:
-1.
+### Optional:
 
-```
-parser.add_argument("-verbose", help="Prints all output messages.", action='store_true')
-parser.add_argument("-no_automatic", help="Skips automatic line measurements .", action='store_true')
-parser.add_argument("-manual", metavar='M', type=str, nargs='?', help="Takes the path to a spreadsheet of lines and/or ROIs (see wiki for formatting details).")
-parser.add_argument("-image", metavar='I', type=str, nargs='?', help="Takes the path to the image to be analysed.")
-parser.add_argument("-out", metavar='O', type=str, nargs='?', help="Takes the path to desired output folder.")
-parser.add_argument("-show_thresholds", help="Saves light and dark threshold images to help with manual tuning to find scalebar.", action='store_true')
-
-parser.add_argument("-scale", metavar='S', type=int, nargs='?', help="Takes the scalebar length integer.")
-parser.add_argument("-scaleunits", metavar='U', type=str, nargs='?', help="Takes the scalebar unit (default = nm).")
-parser.add_argument("-max_lines", metavar='N', type=int, nargs='?', help="Takes an integer to set the maximum value of lines taken from the image (default 500).")
-parser.add_argument("-line_len", metavar='LL', type=int, nargs='?', help="Takes an integer to set the line length (in pixels), default = 0.03 x the width of the image.")
-
-parser.add_argument("-minimum_contour", metavar='MC', type=int, nargs='?', help="Takes an integer to scale the minimum area of a contour allowed, default = 0.003 * image area.")
-parser.add_argument("-manual_scalebar", metavar='MS', type=int, nargs='?', help="Takes an integer as the pixel length of the scalebar (optional, use if scalebar is not automatically located).")
-parser.add_argument("-thickness", metavar='T', type=int, nargs='?', help="Takes an integer to set the line thickness, default = 1.")
-parser.add_argument("-point_fit_val", metavar='P', type=int, nargs='?', help="Takes an integer to reduce the number of points used to fit the sigmoid, default = 1 (take every point).")
-parser.add_argument("-contour_threshold", metavar='C', type=int, nargs='?', help="Takes an integer to set the contour threshold value, default = 140.")
-parser.add_argument("-light_threshold", metavar='L', type=int, nargs='?', help="Takes an integer to set the light threshold value for finding the scalebar, default = 50.")
-parser.add_argument("-dark_threshold", metavar='D', type=int, nargs='?', help="Takes an integer to set the dark threshold value for finding the scalebar, default = 220.")
-```
+Term            |  Description
+:-------------------------:|:-------------------------:
+`-verbose`  | Prints all output messages
+`-no_automatic`  | Skips any automatic line profile processing (note, set `-manual` to use manual search, otherwise no line profiles will be found)
+`-manual [PATH]` | Takes the path to a spreadsheet of lines and/or ROIs (see [wiki](https://github.com/NickiShaw/EM_CGresolution_analysis/wiki/Manual-Options) for formatting details)
+`-thickness [int]` | Takes an integer to set the line thickness used for averaging pixel intensities, default = 1.
+`-show_thresholds` | Saves light and dark threshold images to help with manual tuning to find scalebar
+`-contour_threshold [int]` | Takes an integer to set the contour threshold value, default = 140
+`-light_threshold [int]` | Takes an integer to set the light threshold value for finding the scalebar, default = 50
+`-dark_threshold [int]` | Takes an integer to set the dark threshold value for finding the scalebar, default = 220
+`-scaleunits [str]` | Takes alternative scalebar units (e.g. mm, the default is nm)
+`-max_lines [int]` | Takes an integer to set the maximum value of lines taken from the image (default 500)
+`line_len [int]` | Takes an integer to set the line length (in pixels), default = 0.03 x the width of the image
+`-minimum_contour [int]` | Takes an integer to scale the minimum area of a contour allowed, default = 0.003 * image
+`-manual_scalebar [int]` | Takes an integer as the pixel length of the scalebar (optional, use if scalebar is not automatically located)
+`-point_fit_val [int]` | Takes an integer to reduce the number of points used to fit the sigmoid, default = 1 (take every point), *note this should be set to 5 to reduce the runtime for approximate results*
