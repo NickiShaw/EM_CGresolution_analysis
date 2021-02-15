@@ -4,7 +4,7 @@ A python tool to analyze the resolution of electron microscopy images using the 
 
 To learn more about the tool and all it's features please refer to the [wiki](https://github.com/NickiShaw/EM_CGresolution_analysis/wiki).
 
-<span style="background-color: #FFFF00">**It is recommended that you read the wiki to understand this tool better before use.**</span>
+:bangbang: **It is recommended that you read the wiki to understand this tool better before use.** :bangbang:
 
 
 ## Installation
