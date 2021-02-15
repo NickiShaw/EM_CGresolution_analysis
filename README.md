@@ -2,7 +2,7 @@
 
 A python tool to analyze the resolution of electron microscopy images using the Contrast-to-gradient (CG) method (Ishitani and Sato, 2002).
 
-To learn more about the tool and all it's features please refer to the [wiki](https://github.com/NickiShaw/EM_CGresolution_analysis/wiki), **it is recommended that you read the wiki to understand the tool better before use**.
+To learn more about the tool and all it's features please refer to the [wiki](https://github.com/NickiShaw/EM_CGresolution_analysis/wiki), **it is recommended that you read the wiki to understand this tool better before use**.
 
 ## Installation
 
