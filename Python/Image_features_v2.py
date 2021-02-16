@@ -1,6 +1,7 @@
 import cv2
 import math as m
 import numpy as np
+from sys import platform
 from skimage.draw import line
 from scipy.optimize import curve_fit
 from statistics import mean
@@ -11,7 +12,12 @@ from scipy.special import expit, logit
 def getContours(image, low, high):
     grey_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, thresholded_img = cv2.threshold(grey_img, low, high, cv2.THRESH_BINARY)
-    contour, _ = cv2.findContours(thresholded_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    if platform == 'win32':
+        contour, _ = cv2.findContours(thresholded_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    if platform == 'linux':
+        _, contour, _ = cv2.findContours(thresholded_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    else:
+        print("Error! Not a supported operating system. Platform detected: " + str(platform) + ", but only 'win32' or 'linux' supported.")
     return contour, thresholded_img
 
 
@@ -246,18 +252,18 @@ class Resolution:
                 print(str(type) + " had a poor r value of " + str(r2) + " and will be discarded.")
             return None
 
-        # Get x cutoff for ceiling line.
+        # Get x cutoff for right limit line.
         index = 0
         slope = getslope(fit_x_points[index], fit_x_points[index + 1], fit_y_points[index], fit_y_points[index + 1])
         while abs(slope) < 1:
             index += 1
             slope = getslope(fit_x_points[index], fit_x_points[index + 1], fit_y_points[index], fit_y_points[index + 1])
         # Convert index for fitted line to index for data points.
-        ceiling_x_cutoff = int(index)
+        right_limit_x_cutoff = int(index)
         if self.print_info:
-            print(str(type) + " has as ceiling x cutoff of " + str(ceiling_x_cutoff))
+            print(str(type) + " has as right limit x cutoff of " + str(right_limit_x_cutoff))
 
-        # Get x cutoff for floor line.
+        # Get x cutoff for left limit line.
         lower_index = points_in_fit - 1
         slope = getslope(fit_x_points[lower_index], fit_x_points[lower_index - 1], fit_y_points[lower_index],
                          fit_y_points[lower_index - 1])
@@ -266,43 +272,43 @@ class Resolution:
             slope = getslope(fit_x_points[lower_index], fit_x_points[lower_index - 1], fit_y_points[lower_index],
                              fit_y_points[lower_index - 1])
         # Convert index for fitted line to index for data points.
-        floor_x_cutoff = int(lower_index)
+        left_limit_x_cutoff = int(lower_index)
         if self.print_info:
-            print(str(type) + " has as floor x cutoff of " + str(floor_x_cutoff))
+            print(str(type) + " has as left limit x cutoff of " + str(left_limit_x_cutoff))
 
-        # Get ceiling average y values.
-        ceiling_y_values = []
-        for i in range(ceiling_x_cutoff):
-            ceiling_y_values.append(float(y_points[i]))
+        # Get right limit average y values.
+        right_limit_y_values = []
+        for i in range(right_limit_x_cutoff):
+            right_limit_y_values.append(float(y_points[i]))
         # If no y values are found, cancel: exception found, too much noise to produce good fit.
-        if len(ceiling_y_values) == 0:
+        if len(right_limit_y_values) == 0:
             if self.print_info:
-                print("Exception occurred in the ceiling of " + str(type) + ", too much noise, line discarded.")
+                print("Exception occurred in the right limit of " + str(type) + ", too much noise, line discarded.")
             return None
-        ceiling_y = mean(ceiling_y_values)
+        right_limit_y = mean(right_limit_y_values)
         if self.print_info:
-            print(str(type) + " has the average ceiling y value " + str(ceiling_y))
+            print(str(type) + " has the average right limit y value " + str(right_limit_y))
 
-        # Get floor average y values.
-        floor_y_values = []
-        for i in range(floor_x_cutoff, len(x_points)):
-            floor_y_values.append(float(y_points[i]))
+        # Get left limit average y values.
+        left_limit_y_values = []
+        for i in range(left_limit_x_cutoff, len(x_points)):
+            left_limit_y_values.append(float(y_points[i]))
         # If no y values are found, cancel: exception found, too much noise to produce good fit.
-        if len(floor_y_values) == 0:
+        if len(left_limit_y_values) == 0:
             if self.print_info:
-                print("Exception occurred in the floor of " + str(type) + ", too much noise, line discarded.")
+                print("Exception occurred in the left limit of " + str(type) + ", too much noise, line discarded.")
             return None
-        floor_y = mean(floor_y_values)
+        left_limit_y = mean(left_limit_y_values)
         if self.print_info:
-            print(str(type) + " has the average floor y value " + str(floor_y))
+            print(str(type) + " has the average left limit y value " + str(left_limit_y))
 
-        # Get 25% and 75% bound x values with respect to the ceiling_y and floor_y values.
-        if ceiling_y > floor_y:
-            Y_25bound = abs(ceiling_y - floor_y) * 0.25 + floor_y
-            Y_75bound = ceiling_y - abs(ceiling_y - floor_y) * 0.25
+        # Get 25% and 75% bound x values with respect to the right_limit_y and left_limit_y values.
+        if right_limit_y > left_limit_y:
+            Y_25bound = abs(right_limit_y - left_limit_y) * 0.25 + left_limit_y
+            Y_75bound = right_limit_y - abs(right_limit_y - left_limit_y) * 0.25
         else:
-            Y_25bound = abs(ceiling_y - floor_y) * 0.25 + ceiling_y
-            Y_75bound = floor_y - abs(ceiling_y - floor_y) * 0.25
+            Y_25bound = abs(right_limit_y - left_limit_y) * 0.25 + right_limit_y
+            Y_75bound = left_limit_y - abs(right_limit_y - left_limit_y) * 0.25
         # print("The Y bounds for resolution calculation = bottom:" + str(Y_25bound) + ", top:" + str(Y_75bound))
 
         X_25bound = fit_x_points[find_nearest(fit_y_points, Y_25bound)]
@@ -326,10 +332,10 @@ class Resolution:
         # Show where the bounds are placed
         fig2 = plt.figure()
         plt.plot(x_points, y_points, 'o', label='data')
-        plt.plot([ceiling_x_cutoff, ceiling_x_cutoff], [0, max(y_points)], label='upper bound')
-        plt.plot([floor_x_cutoff, floor_x_cutoff], [0, max(y_points)], label='lower bound')
-        plt.plot([ceiling_x_cutoff, max(x_points)], [floor_y, floor_y], label='ceiling')
-        plt.plot([floor_x_cutoff, min(x_points)], [ceiling_y, ceiling_y], label='floor')
+        plt.plot([right_limit_x_cutoff, right_limit_x_cutoff], [0, max(y_points)], label='left bound')
+        plt.plot([left_limit_x_cutoff, left_limit_x_cutoff], [0, max(y_points)], label='right bound')
+        plt.plot([right_limit_x_cutoff, max(x_points)], [left_limit_y, left_limit_y], label='right limit')
+        plt.plot([left_limit_x_cutoff, min(x_points)], [right_limit_y, right_limit_y], label='left limit')
         plt.plot(fit_x_points, fit_y_points, label='fit')
         plt.xlabel('Position on line axis')
         plt.ylabel('Intensity value')

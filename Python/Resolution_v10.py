@@ -12,6 +12,11 @@ import csv
 import os
 import argparse
 
+
+#############################################################
+# Parse arguments
+#############################################################
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-verbose", help="Prints all output messages.", action='store_true')
 parser.add_argument("-no_automatic", help="Skips automatic line measurements .", action='store_true')
@@ -25,7 +30,7 @@ parser.add_argument("-scaleunits", metavar='U', type=str, nargs='?', help="Takes
 parser.add_argument("-max_lines", metavar='N', type=int, nargs='?', help="Takes an integer to set the maximum value of lines taken from the image (default 500).")
 parser.add_argument("-line_len", metavar='LL', type=int, nargs='?', help="Takes an integer to set the line length (in pixels), default = 0.03 x the width of the image.")
 
-parser.add_argument("-minimum_contour", metavar='MC', type=int, nargs='?', help="Takes an integer to scale the minimum area of a contour allowed, default = 0.003 * image area.")
+parser.add_argument("-minimum_contour", metavar='MC', type=int, nargs='?', help="Takes an integer to scale the minimum area of a contour allowed, default = 0.005 * image area.")
 parser.add_argument("-manual_scalebar", metavar='MS', type=int, nargs='?', help="Takes an integer as the pixel length of the scalebar (optional, use if scalebar is not automatically located).")
 parser.add_argument("-thickness", metavar='T', type=int, nargs='?', help="Takes an integer to set the line thickness, default = 1.")
 parser.add_argument("-point_fit_val", metavar='P', type=int, nargs='?', help="Takes an integer to reduce the number of points used to fit the sigmoid, default = 1 (take every point).")
@@ -45,7 +50,10 @@ else:
 
 # "-out" takes the path to the output folder.
 if args.out != None:
-    output_dir = args.out + "\\"
+    if args.out[len(args.out)-1] == "/" or rgs.out[len(args.out)-1] == "\\":
+        output_dir = args.out
+    else:
+        output_dir = args.out + "/"
 else:
     sys.exit("An image is required, flag '-image [I]'.")
     # output_dir = "C:\\Users\\shawn\\Desktop\\W2021_coop\\resolution\\output\\"
@@ -55,7 +63,6 @@ if args.show_thresholds:
     show_thresholds = True
 else:
     show_thresholds = False
-
 
 # "-verbose" prints all outputs.
 if args.verbose:
@@ -82,7 +89,7 @@ if args.thickness != None:
 else:
     thickness = 1
 
-# "-thickness" with int sets alternative thickness (default 1).
+# "-minimum_contour" with int sets alternative minimum contour scale value (default 0.005 so the minimum size is the image area * 0.005).
 if args.minimum_contour != None:
     minimum_contour = args.minimum_contour
 else:
@@ -142,10 +149,13 @@ else:
 # Save the arguments in the run txt file for repetition.
 all_arguments = str(args)
 
+#############################################################
+# Load Image
+#############################################################
 
 # Make folder for each individual run to avoid overwriting previous output.
 time = str(datetime.datetime.now()).replace(" ", "_").replace(":", "-")
-output_dir = output_dir + "\\" + time + "\\"
+output_dir = output_dir + time + "/"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
@@ -163,7 +173,7 @@ if args.line_len != None:
 else:
     line_length = img_width * 0.03
 
-# Testing variables set to False.
+# Testing variables (set to False for command line runs).
 show_scalebar = False
 show_contour_threshold = False
 show_contours = False
@@ -173,6 +183,8 @@ debug = False
 #############################################################
 # Get scalebar
 #############################################################
+
+# Default runs process unless -manual_scalebar flag is used.
 if find_scalebar:
     scbr_img = img.copy()
 
@@ -276,6 +288,10 @@ y1_output = []
 x2_output = []
 y2_output = []
 
+#############################################################
+# Process automatic lines
+#############################################################
+
 # Automatically found lines.
 if not no_automatic:
     for t in range(len(normal_points)):
@@ -292,12 +308,14 @@ if not no_automatic:
             x2_output.append(normal_points[t][1][0])
             y2_output.append(normal_points[t][1][1])
 
+#############################################################
+# Process manual lines
+#############################################################
 
 if manual_option:
     manual_df = Spreadsheet(pd.read_csv(manual_path, dtype=str))
     manual_points = manual_df.import_all_manual_data()[0]
     manual_ROIs = manual_df.import_all_manual_data()[1]
-
 
 # Manually set lines
 if manual_option and manual_points != []:
@@ -328,6 +346,9 @@ if manual_option and manual_points != []:
             x2_output.append(manual_points[t][1][0])
             y2_output.append(manual_points[t][1][1])
 
+#############################################################
+# Process ROIs
+#############################################################
 
 # Automatic lines from ROI.
 if manual_option and manual_ROIs != []:
@@ -346,7 +367,7 @@ if manual_option and manual_ROIs != []:
 
         # Filter out small contours (noise) and parts touching the edges of the image.
         ROI_particle_contours = ContourSet(ROI_prtcle_contours, w, h)
-        ROI_filtered_contours, ROI_contour_points = ROI_particle_contours.filterSmallContours()
+        ROI_filtered_contours, ROI_contour_points = ROI_particle_contours.filterSmallContours(minimum_contour)
 
         # Draw particle contours.
         if show_contours:
@@ -400,7 +421,7 @@ if manual_option and manual_ROIs != []:
                 y2_output.append(ROI_normal_points[t][1][1])
 
 #############################################################
-# Process outputs
+# Save outputs
 #############################################################
 
 res_header = 'Resolution (' + str(sclbr_realsize_index) + ')'
@@ -444,7 +465,7 @@ if manual_option and manual_points != []:
     for i in range(len(manual_points)):
         info_file.write("\t Line " + str(i) + " from point 1: " + str(manual_points[i][0]) + ", to point 2: " + str(manual_points[i][1]) + " \n")
 if manual_option and manual_ROIs != []:
-    info_file.write("Manual ROI option: " + str(len(ROI_normal_points)) + " ROI's run: \n")
+    info_file.write("Manual ROI option: " + str(len(ROI_normal_points)) + " ROIs run: \n")
     for i in range(len(manual_ROIs)):
         x, y, w, h = manual_ROIs[i]
         info_file.write("\t Line " + str(i) + " from top left point: (" + str(x) + ", " + str(y) + "), width: " + str(w) + "px , height: " + str(h) + "px \n")
