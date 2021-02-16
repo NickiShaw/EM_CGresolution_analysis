@@ -1,4 +1,4 @@
-name: CG_resolution_env_linux
+name: CG_resolution_env
 channels:
   - conda-forge
   - anaconda
