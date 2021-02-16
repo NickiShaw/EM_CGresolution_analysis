@@ -17,7 +17,7 @@ Linux (e.g. Ubuntu terminal) |  Unix (e.g. Windows using the powershell terminal
 Then in your terminal install the CG_resolution_env conda environment using:
 
 ```
- # Note: Change environment_sys to environment_unix or environment_linux.
+ # Note: Change "environment_sys" to "environment_unix" or "environment_linux".
 conda env create -f environment_sys.yml
 
 conda activate CG_resolution_env
