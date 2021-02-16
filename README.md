@@ -10,14 +10,14 @@ To learn more about the tool and all it's features please refer to the [wiki](ht
 ## Installation
 
 This tool was built to run directly on the command line. There is a conda environment for this tool, if you do not already have conda installed you can do so following [these instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) (note: miniconda is sufficient, you do not need to install the whole anaconda package). Next download the appropriate conda environment depending on your system:
-Linux (e.g. Ubuntu terminal) |  Unix (e.g. Windows using the powershell terminal)
+Linux (e.g. Ubuntu terminal) |  Windows (e.g. Powershell terminal)
 :-------------------------:|:-------------------------:
-[environment_linux.yml](https://github.com/NickiShaw/EM_CGresolution_analysis/blob/main/environment_linux.yml)  | [environment_unix.yml](https://github.com/NickiShaw/EM_CGresolution_analysis/blob/main/environment_unix.yml)
+[environment_linux.yml](https://github.com/NickiShaw/EM_CGresolution_analysis/blob/main/environment_linux.yml)  | [environment_windows.yml](https://github.com/NickiShaw/EM_CGresolution_analysis/blob/main/environment_windows.yml)
 
 Then in your terminal install the CG_resolution_env conda environment using:
 
 ```
- # Note: Change "environment_sys" to "environment_unix" or "environment_linux".
+ # Note: Change "environment_sys" to "environment_windows" or "environment_linux".
 conda env create -f environment_sys.yml
 
 conda activate CG_resolution_env
